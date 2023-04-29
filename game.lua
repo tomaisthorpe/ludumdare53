@@ -29,7 +29,7 @@ function Game:enter()
   self.camera:setFollowStyle("LOCKON")
   self.camera:setBounds(0, 0, config.levelWidth, config.levelHeight)
 
-  self.player = Player(self, self.world, 200, 200)
+  self.player = Player(self, self.world, 200, 800)
   self.entities = {}
   self.people = {}
   self.hits = 0

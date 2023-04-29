@@ -16,6 +16,11 @@ local Person = Class {
     goingRight = true,
     dead = false,
     speed = 10,
+
+
+    frame = 0,
+    fps = 10,
+    timer = 0,
 }
 
 function Person:destroy()
@@ -50,6 +55,15 @@ function Person:update(dt)
     end
 
     self.object:setLinearVelocity(30, 0)
+
+    self.timer = self.timer + dt
+
+    if self.timer > 1 / self.fps then
+        self.frame = self.frame + 1
+        if self.frame > 7 then self.frame = 0 end
+
+        self.timer = 0
+    end
 end
 
 function Person:draw()
@@ -69,7 +83,10 @@ function Person:draw()
     love.graphics.translate(-32, -96/2)
 
     love.graphics.scale(4, 4)
-    love.graphics.draw(self.image)
+
+    local quad = love.graphics.newQuad((self.frame + 1) * 16, 0, 16, 24, self.image:getWidth(), self.image:getHeight())
+
+    love.graphics.draw(self.image, quad)
 
     love.graphics.pop()
 end
