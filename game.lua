@@ -21,8 +21,9 @@ function Game:enter()
   self.world = wf.newWorld(0, 0, true)
   self.world:setGravity(0, 512)
   self.world:addCollisionClass('Solid')
+  self.world:addCollisionClass('Boundary')
   self.world:addCollisionClass('Player')
-  self.world:addCollisionClass('Person', { ignores = { 'Player', 'Person' } })
+  self.world:addCollisionClass('Person', { ignores = { 'Player', 'Person', 'Boundary' } })
   self.world:addCollisionClass('Poop', { ignores = { 'Player', 'Person' } })
 
 

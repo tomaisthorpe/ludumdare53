@@ -22,15 +22,13 @@ function Level:update(dt)
 
     self.lastPerson = love.timer.getTime()
 
-    local person = Person(self.game, self.world, 16, config.levelHeight - 18)
+    local person = Person(self.game, self.world, -75, config.levelHeight - 18 - 36)
     self.game:addPerson(person)
-
-    print('hi')
 end
 
-local boundary = function (world, x, y, w, h)
+local boundary = function (world, x, y, w, h, class)
     local wall = world:newRectangleCollider(x, y, w, h)
-    wall:setCollisionClass('Solid')
+    wall:setCollisionClass(class)
     wall:setType('static')
 
     return wall
@@ -38,10 +36,10 @@ end
 
 function Level:generate()
     -- TODO currently can't remove this
-    local bottom = boundary(self.world, 0, 900-18, config.levelWidth, 18)
-    local top = boundary(self.world, 0, 0, config.levelWidth, 18)
-    local left = boundary(self.world, 0, 0, 20, config.levelHeight)
-    local right = boundary(self.world, config.levelWidth - 20, 0, 20, config.levelHeight)
+    local bottom = boundary(self.world, -150, 900-19, config.levelWidth + 300, 19, 'Solid')
+    local top = boundary(self.world, 0, 0, config.levelWidth, 18, 'Boundary')
+    local left = boundary(self.world, 0, 0, 20, config.levelHeight, 'Boundary')
+    local right = boundary(self.world, config.levelWidth - 20, 0, 20, config.levelHeight, 'Boundary')
 
     self.boundaries = {top, bottom, left, right}
 end

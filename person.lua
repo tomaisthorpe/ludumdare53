@@ -61,7 +61,7 @@ function Person:update(dt)
         self.speed = self.runningSpeed
     end
 
-    if self.object:getX() < 0 or self.object:getX() > config.levelWidth then
+    if self.object:getX() < -100 or self.object:getX() > config.levelWidth + 100 then
         self:destroy()
     end
 
