@@ -1,4 +1,5 @@
 local Class = require("hump.class")
+local config = require("config")
 
 local Person = Class {
     init = function(self, game, world, x, y)
@@ -14,7 +15,7 @@ local Person = Class {
     end,
     goingRight = true,
     dead = false,
-    speed = 5,
+    speed = 10,
 }
 
 function Person:destroy()
@@ -37,10 +38,18 @@ function Person:update(dt)
     if self.object:enter('Poop') then
         local collision = self.object:getEnterCollisionData('Poop')
         local object = collision.collider:getObject()
-        object:destroy()
 
-        self.game:addHit()
+        if object then
+            object:destroy()
+            self.game:addHit()
+        end
     end
+
+    if self.object:getX() < 0 or self.object:getX() > config.levelWidth then
+        self:destroy()
+    end
+
+    self.object:setLinearVelocity(30, 0)
 end
 
 function Person:draw()

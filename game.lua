@@ -27,8 +27,9 @@ function Game:enter()
 
   self.camera = Camera(0, 0, 800, 600)
   self.camera:setFollowStyle("LOCKON")
+  self.camera:setBounds(0, 0, config.levelWidth, config.levelHeight)
 
-  self.player = Player(self, self.world, 100, 100)
+  self.player = Player(self, self.world, 200, 200)
   self.entities = {}
   self.people = {}
   self.hits = 0
@@ -55,6 +56,7 @@ function Game:update(dt)
 
   self.world:update(dt)
   self.player:update(dt)
+  self.level:update(dt)
 
   for i, e in ipairs(self.entities) do
     if e.dead then
@@ -100,6 +102,8 @@ end
 
 function Game:drawGame()
   self.camera:attach()
+  self.level:drawBackground()
+
   self.player:draw()
 
   for _, e in ipairs(self.entities) do
@@ -113,6 +117,8 @@ function Game:drawGame()
       e:draw()
     end
   end
+
+  self.level:drawForeground()
 
   if config.physicsDebug then
     self.world:draw(1)
