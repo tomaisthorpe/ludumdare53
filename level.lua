@@ -22,7 +22,14 @@ function Level:update(dt)
 
     self.lastPerson = love.timer.getTime()
 
-    local person = Person(self.game, self.world, -75, config.levelHeight - 18 - 36)
+    local goingRight = true
+    local x = -75
+    if love.math.random(0, 1) == 1 then
+        goingRight = false
+        x = config.levelWidth + 75
+    end
+
+    local person = Person(self.game, self.world, x, config.levelHeight - 18 - 36, goingRight)
     self.game:addPerson(person)
 end
 

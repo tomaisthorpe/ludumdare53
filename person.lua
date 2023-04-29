@@ -2,19 +2,21 @@ local Class = require("hump.class")
 local config = require("config")
 
 local Person = Class {
-    init = function(self, game, world, x, y)
+    init = function(self, game, world, x, y, goingRight)
         self.game = game
         self.world = world
         self.image = love.graphics.newImage("assets/person.png")
         self.splat = love.graphics.newImage("assets/person-splat.png")
+        self.goingRight = goingRight
 
-        self.object = world:newRectangleCollider(x+30, y-96/2, 48, 96)
+        print(goingRight)
+
+        self.object = world:newRectangleCollider(x, y-45, 48, 96)
         self.object:setCollisionClass('Person')
         self.object:setObject(self)
         self.object:setFixedRotation(true)
         self.object:setLinearDamping(10)
     end,
-    goingRight = true,
     dead = false,
     speed = 40,
     walkingSpeed = 40,
@@ -70,7 +72,12 @@ function Person:update(dt)
         return
     end
 
-    self.object:setLinearVelocity(self.speed, 0)
+    local speed = self.speed
+    if not self.goingRight then
+        speed = speed * -1
+    end
+    self.object:setLinearVelocity(speed, 0)
+
 
     self.timer = self.timer + dt
 
