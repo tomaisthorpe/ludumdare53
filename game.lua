@@ -1,4 +1,7 @@
 local config = require("config")
+local Camera = require("Camera")
+local wf = require("windfield")
+local Player = require("player")
 
 local Game = {
   translate = {0, 0},
@@ -11,9 +14,26 @@ function Game:init()
 end
 
 function Game:enter()
+  self.world = wf.newWorld(0, 0, true)
+  self.world:setGravity(0, 512)
+  self.world:addCollisionClass('Solid')
+  self.world:addCollisionClass('Player')
+
+  local obj = self.world:newRectangleCollider(-100, 300, 4000, 40)
+  obj:setType('static')
+
+  self.camera = Camera(0, 0, 800, 600)
+  self.camera:setFollowStyle("LOCKON")
+
+  self.player = Player(self, self.world, 100, 100)
 end
 
 function Game:update(dt)
+  self.camera:update(dt)
+  self.camera:follow(self.player:getX(), self.player:getY())
+
+  self.world:update(dt)
+  self.player:update(dt)
 end
 
 function Game:draw()
@@ -26,7 +46,9 @@ function Game:draw()
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle("fill", 0, 0, 800, 600)
 
+  self:drawGame()
   self:drawUI()
+
   love.graphics.pop()
 
   -- Draw borders
@@ -35,6 +57,18 @@ function Game:draw()
   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), Game.translate[2])
   love.graphics.rectangle("fill", love.graphics.getWidth() - Game.translate[1], 0, Game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, love.graphics.getHeight() - Game.translate[2], love.graphics.getWidth(), Game.translate[2])
+end
+
+function Game:drawGame()
+  self.camera:attach()
+  self.player:draw()
+
+  if config.physicsDebug then
+    self.world:draw(1)
+  end
+
+  self.camera:detach()
+
 end
 
 function Game:drawUI()
@@ -72,6 +106,10 @@ end
 function Game:keypressed(key)
   if key == "escape" then 
     love.event.quit()
+  end
+
+  if key == "up" then
+    self.player:flap()
   end
 end
 
