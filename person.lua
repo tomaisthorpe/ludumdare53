@@ -68,6 +68,7 @@ function Person:draw()
 
     love.graphics.translate(-32, -96/2)
 
+    love.graphics.scale(4, 4)
     love.graphics.draw(self.image)
 
     love.graphics.pop()

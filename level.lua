@@ -47,15 +47,16 @@ end
 function Level:drawBackground()
     love.graphics.push()
     love.graphics.setColor(1, 1, 1)
+    love.graphics.scale(4, 4)
     love.graphics.draw(self.background)
     love.graphics.pop()
 end
 
 function Level:drawForeground()
-    love.graphics.push()
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.foreground)
-    love.graphics.pop()
+    -- love.graphics.push()
+    -- love.graphics.setColor(1, 1, 1)
+    -- love.graphics.draw(self.foreground)
+    -- love.graphics.pop()
 end
 
 return Level
