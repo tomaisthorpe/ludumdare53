@@ -19,7 +19,7 @@ end
 
 function Game:enter()
   self.world = wf.newWorld(0, 0, true)
-  self.world:setGravity(0, 512)
+  self.world:setGravity(0, 700)
   self.world:addCollisionClass('Solid')
   self.world:addCollisionClass('Boundary')
   self.world:addCollisionClass('Player')
