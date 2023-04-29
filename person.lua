@@ -16,12 +16,14 @@ local Person = Class {
     end,
     goingRight = true,
     dead = false,
-    speed = 10,
+    speed = 40,
+    walkingSpeed = 40,
+    runningSpeed = 100,
 
     hits = 0,
 
     frame = 0,
-    fps = 10,
+    baseFPS = 10,
     timer = 0,
 }
 
@@ -35,6 +37,10 @@ end
 
 function Person:getX()
     return self.object:getX()
+end
+
+function Person:getFPS()
+    return self.baseFPS * (self.speed / self.walkingSpeed)
 end
 
 function Person:getY()
@@ -52,17 +58,18 @@ function Person:update(dt)
         end
 
         self.hits = self.hits + 1
+        self.speed = self.runningSpeed
     end
 
     if self.object:getX() < 0 or self.object:getX() > config.levelWidth then
         self:destroy()
     end
 
-    self.object:setLinearVelocity(30, 0)
+    self.object:setLinearVelocity(self.speed, 0)
 
     self.timer = self.timer + dt
 
-    if self.timer > 1 / self.fps then
+    if self.timer > 1 / self:getFPS() then
         self.frame = self.frame + 1
         if self.frame > 7 then self.frame = 0 end
 
