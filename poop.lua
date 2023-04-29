@@ -6,8 +6,20 @@ local Poop = Class {
         self.object = world:newCircleCollider(x, y, 8)
         self.object:setCollisionClass('Poop')
         self.object:setLinearVelocity(vx, vy)
-        self.object:setBullet(true)
+        -- self.object:setBullet(true)
         self.object:setObject(self)
+
+        self.image = love.graphics.newImage('assets/poop.png')
+
+        self.scale = (love.math.random(0, 2) / 4) + 1
+        self.rotation = love.math.random() * math.pi * 2
+
+
+        if vx > 0 then
+            self.object:setAngularVelocity(love.math.random() * 5)
+        else
+            self.object:setAngularVelocity(love.math.random() * -5)
+        end
 
         self.dead = false
         self.lifetime = 10
@@ -48,7 +60,10 @@ function Poop:draw()
 
     love.graphics.setColor(1, 1, 1)
     love.graphics.translate(self:getX(), self:getY())
-    love.graphics.circle('fill', 0, 0, 4)
+    love.graphics.rotate(self.object:getAngle())
+    love.graphics.translate(-3 * self.scale, -3 * self.scale)
+    love.graphics.scale(self.scale, self.scale)
+    love.graphics.draw(self.image)
     love.graphics.pop()
 end
 

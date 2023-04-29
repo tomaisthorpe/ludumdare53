@@ -97,7 +97,11 @@ function Player:poop()
     self.lastPoop = love.timer.getTime()
 
     local vx, vy = self.object:getLinearVelocity()
-    local poop = Poop(self.game, self.world, self:getX(), self:getY(), vx, vy)
+    local offset = -7
+    if not self.goingRight then
+        offset = offset * -1
+    end
+    local poop = Poop(self.game, self.world, self:getX() + offset, self:getY() + 5, vx, vy)
     self.game:addEntity(poop)
 
 end

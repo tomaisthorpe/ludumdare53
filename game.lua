@@ -126,13 +126,13 @@ function Game:drawGame()
   self.camera:attach()
   self.level:drawBackground()
 
-  self.player:draw()
-
   for _, e in ipairs(self.entities) do
     if not e.dead then
       e:draw()
     end
   end
+
+  self.player:draw()
 
   for _, e in ipairs(self.people) do
     if not e.dead then
