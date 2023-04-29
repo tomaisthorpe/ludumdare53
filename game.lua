@@ -15,6 +15,7 @@ function Game:init()
   Game:calculateScaling()
 
   self.font = love.graphics.newFont('assets/sharetech.ttf', 16)
+  self.arrow = love.graphics.newImage('assets/arrow.png')
 end
 
 function Game:enter()
@@ -143,7 +144,56 @@ function Game:drawUI()
 
   love.graphics.printf("Hits: ".. self.hits, 16, 16, 200, "left")
 
+  self:drawArrows()
+
   love.graphics.pop()
+end
+
+function Game:drawArrows()
+  love.graphics.push()
+
+  love.graphics.translate(400, 150)
+
+  local gap = 150
+  local leftArrow = false
+  local rightArrow = false
+
+  local minX = self.camera.x - 400
+  local maxX = self.camera.x + 400
+
+  for _, e in ipairs(self.people) do
+    if e.dead == false then
+      local x = e:getX()
+
+      if  e.hits == 0 then
+        if x < minX and x > 0 then
+          leftArrow = true
+        end
+
+        if x > maxX and x < config.levelWidth then
+          rightArrow = true
+        end
+      end
+    end
+  end
+
+  if leftArrow then
+    love.graphics.push()
+    love.graphics.scale(-1, 1)
+    love.graphics.translate(gap, 0)
+    love.graphics.draw(self.arrow)
+    love.graphics.pop()
+  end
+
+  if rightArrow then
+    love.graphics.push()
+    love.graphics.translate(gap, 0)
+    love.graphics.draw(self.arrow)
+    love.graphics.pop()
+  end
+
+  love.graphics.pop()
+
 end
 
 function Game:getMousePosition()
