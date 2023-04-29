@@ -9,8 +9,6 @@ local Person = Class {
         self.splat = love.graphics.newImage("assets/person-splat.png")
         self.goingRight = goingRight
 
-        print(goingRight)
-
         self.object = world:newRectangleCollider(x, y-45, 48, 96)
         self.object:setCollisionClass('Person')
         self.object:setObject(self)
@@ -112,7 +110,7 @@ function Person:draw()
     love.graphics.draw(self.image, quad)
 
     if self.hits > 0 then
-        local sQuad = love.graphics.newQuad((self.hits - 1) * 12, 0, 12, 24, self.splat:getWidth(), self.splat:getHeight())
+        local sQuad = love.graphics.newQuad((math.min(self.hits, 6) - 1) * 12, 0, 12, 24, self.splat:getWidth(), self.splat:getHeight())
         love.graphics.draw(self.splat, sQuad)
     end
 
