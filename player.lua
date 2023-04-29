@@ -22,6 +22,10 @@ local Player = Class {
     lastFlap = -100,
     maxVX = 200,
 
+    frame = 0,
+    fps = 20,
+    timer = 0,
+
     poopRate = 1,
     lastPoop = -100,
 }
@@ -64,6 +68,16 @@ function Player:update(dt)
     if love.keyboard.isDown("space") then
         self:poop()
     end
+
+
+    self.timer = self.timer + dt
+
+    if self.timer > 1 / self.fps then
+        self.frame = self.frame + 1
+        if self.frame > 11 then self.frame = 0 end
+
+        self.timer = 0
+    end
 end
 
 function Player:flap()
@@ -103,8 +117,11 @@ function Player:draw()
     end
 
     love.graphics.translate(-16, -16)
+    love.graphics.scale(2, 2)
 
-    love.graphics.draw(self.image)
+    local quad = love.graphics.newQuad(self.frame * 16, 0, 16, 16, self.image:getWidth(), self.image:getHeight())
+
+    love.graphics.draw(self.image, quad)
 
     love.graphics.pop()
 end
