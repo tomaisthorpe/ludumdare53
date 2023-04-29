@@ -4,7 +4,7 @@ local wf = require("windfield")
 local Player = require("player")
 
 local Game = {
-  translate = {0, 0},
+  translate = { 0, 0 },
   scaling = 1,
 }
 
@@ -18,14 +18,21 @@ function Game:enter()
   self.world:setGravity(0, 512)
   self.world:addCollisionClass('Solid')
   self.world:addCollisionClass('Player')
+  self.world:addCollisionClass('Poop', { ignores = { 'Player' } })
 
   local obj = self.world:newRectangleCollider(-100, 300, 4000, 40)
+  obj:setCollisionClass('Solid')
   obj:setType('static')
 
   self.camera = Camera(0, 0, 800, 600)
   self.camera:setFollowStyle("LOCKON")
 
   self.player = Player(self, self.world, 100, 100)
+  self.entities = {}
+end
+
+function Game:addEntity(entity)
+  table.insert(self.entities, entity)
 end
 
 function Game:update(dt)
@@ -34,6 +41,14 @@ function Game:update(dt)
 
   self.world:update(dt)
   self.player:update(dt)
+
+  for i, e in ipairs(self.entities) do
+    if e.dead then
+      table.remove(self.entities, i)
+    else
+      e:update(dt)
+    end
+  end
 end
 
 function Game:draw()
@@ -55,13 +70,21 @@ function Game:draw()
   love.graphics.setColor(config.borderColor[1], config.borderColor[2], config.borderColor[3])
   love.graphics.rectangle("fill", 0, 0, Game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), Game.translate[2])
-  love.graphics.rectangle("fill", love.graphics.getWidth() - Game.translate[1], 0, Game.translate[1], love.graphics.getHeight())
-  love.graphics.rectangle("fill", 0, love.graphics.getHeight() - Game.translate[2], love.graphics.getWidth(), Game.translate[2])
+  love.graphics.rectangle("fill", love.graphics.getWidth() - Game.translate[1], 0, Game.translate[1],
+    love.graphics.getHeight())
+  love.graphics.rectangle("fill", 0, love.graphics.getHeight() - Game.translate[2], love.graphics.getWidth(),
+    Game.translate[2])
 end
 
 function Game:drawGame()
   self.camera:attach()
   self.player:draw()
+
+  for _, e in ipairs(self.entities) do
+    if not e.dead then
+      e:draw()
+    end
+  end
 
   if config.physicsDebug then
     self.world:draw(1)
@@ -97,14 +120,14 @@ function Game:calculateScaling()
   local minEdge = love.graphics.getHeight()
   if minEdge < love.graphics.getWidth() then
     Game.scaling = minEdge / 600
-     Game.translate = {(love.graphics.getWidth() - (800 * Game.scaling)) / 2, 0}
+    Game.translate = { (love.graphics.getWidth() - (800 * Game.scaling)) / 2, 0 }
   else
     Game.scaling = love.graphics.getWidth() / 800
   end
 end
 
 function Game:keypressed(key)
-  if key == "escape" then 
+  if key == "escape" then
     love.event.quit()
   end
 

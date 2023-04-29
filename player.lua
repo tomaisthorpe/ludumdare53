@@ -1,4 +1,5 @@
 local Class = require("hump.class")
+local Poop = require("poop")
 
 local Player = Class {
     init = function(self, game, world, x, y)
@@ -21,6 +22,9 @@ local Player = Class {
     flapRate = 1,
     lastFlap = -100,
     maxVX = 100,
+
+    poopRate = 1,
+    lastPoop = -100,
 }
 
 function Player:destroy()
@@ -57,6 +61,10 @@ function Player:update(dt)
 
     local vx, vy = self.object:getLinearVelocity()
     self.object:setLinearVelocity(math.min(vx, self.maxVX), vy)
+
+    if love.keyboard.isDown("space") then
+        self:poop()
+    end
 end
 
 function Player:flap()
@@ -66,6 +74,18 @@ function Player:flap()
 
     self.object:applyLinearImpulse(0, self.flapForce)
     self.lastFlap = love.timer.getTime()
+end
+
+function Player:poop()
+    if self.lastPoop >= love.timer.getTime() - self.poopRate then
+        return
+    end
+
+    self.lastPoop = love.timer.getTime()
+
+    local vx, vy = self.object:getLinearVelocity()
+    local poop = Poop(self.game, self.world, self:getX(), self:getY(), vx, vy)
+    self.game:addEntity(poop)
 
 end
 
