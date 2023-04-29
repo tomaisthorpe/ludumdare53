@@ -16,11 +16,11 @@ local Player = Class {
     dead = false,
     destroyed = false,
     lift = -750,
-    glide = 450,
+    glide = 950,
     flapForce = -80,
     flapRate = 0.5,
     lastFlap = -100,
-    maxVX = 200,
+    maxVX = 250,
     maxVY = 100,
 
     animationTime = 11 / 30,

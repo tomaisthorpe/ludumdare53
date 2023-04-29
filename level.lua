@@ -24,6 +24,8 @@ function Level:update(dt)
 
     local person = Person(self.game, self.world, 16, config.levelHeight - 18)
     self.game:addPerson(person)
+
+    print('hi')
 end
 
 local boundary = function (world, x, y, w, h)
