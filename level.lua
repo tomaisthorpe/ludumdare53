@@ -11,7 +11,7 @@ local Level = Class {
         self.foreground = love.graphics.newImage('assets/level-foreground.png')
 
     end,
-    lastPerson = 0,
+    lastPerson = -5,
     personRate = 5,
 }
 

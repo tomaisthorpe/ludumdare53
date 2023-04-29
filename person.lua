@@ -6,8 +6,9 @@ local Person = Class {
         self.game = game
         self.world = world
         self.image = love.graphics.newImage("assets/person.png")
+        self.splat = love.graphics.newImage("assets/person-splat.png")
 
-        self.object = world:newRectangleCollider(x-32, y-96/2, 64, 96)
+        self.object = world:newRectangleCollider(x+30, y-96/2, 48, 96)
         self.object:setCollisionClass('Person')
         self.object:setObject(self)
         self.object:setFixedRotation(true)
@@ -17,6 +18,7 @@ local Person = Class {
     dead = false,
     speed = 10,
 
+    hits = 0,
 
     frame = 0,
     fps = 10,
@@ -48,6 +50,8 @@ function Person:update(dt)
             object:destroy()
             self.game:addHit()
         end
+
+        self.hits = self.hits + 1
     end
 
     if self.object:getX() < 0 or self.object:getX() > config.levelWidth then
@@ -80,13 +84,18 @@ function Person:draw()
         love.graphics.scale(-1, 1)
     end
 
-    love.graphics.translate(-32, -96/2)
+    love.graphics.translate(-24, -96/2)
 
     love.graphics.scale(4, 4)
 
-    local quad = love.graphics.newQuad((self.frame + 1) * 16, 0, 16, 24, self.image:getWidth(), self.image:getHeight())
+    local quad = love.graphics.newQuad((self.frame + 1) * 12, 0, 12, 24, self.image:getWidth(), self.image:getHeight())
 
     love.graphics.draw(self.image, quad)
+
+    if self.hits > 0 then
+        local sQuad = love.graphics.newQuad((self.hits - 1) * 12, 0, 12, 24, self.splat:getWidth(), self.splat:getHeight())
+        love.graphics.draw(self.splat, sQuad)
+    end
 
     love.graphics.pop()
 end
