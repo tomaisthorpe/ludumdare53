@@ -46,6 +46,11 @@ function Player:getY()
 end
 
 function Player:update(dt)
+    if self.object:enter('Solid') then
+        self.game:gameOver('floor')
+        return
+    end
+
     if love.keyboard.isDown("left") then
         self.goingRight = false
     end

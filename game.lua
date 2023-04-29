@@ -19,6 +19,10 @@ function Game:init()
 end
 
 function Game:enter()
+  self:setupGame()
+end
+
+function Game:setupGame()
   self.world = wf.newWorld(0, 0, true)
   self.world:setGravity(0, 700)
   self.world:addCollisionClass('Solid')
@@ -32,7 +36,7 @@ function Game:enter()
   self.camera:setFollowStyle("LOCKON")
   self.camera:setBounds(0, 0, config.levelWidth, config.levelHeight)
 
-  self.player = Player(self, self.world, 200, 800)
+  self.player = Player(self, self.world, 200, 500)
   self.entities = {}
   self.people = {}
   self.hits = 0
@@ -41,6 +45,15 @@ function Game:enter()
   self.level:generate()
 
   -- self.splat = Splat()
+  --
+  self.isGameOver = false
+  self.gameOverReason = ''
+
+end
+
+function Game:gameOver(reason)
+  self.isGameOver = true
+  self.gameOverReason = reason
 end
 
 function Game:addPerson(person)
@@ -56,6 +69,9 @@ function Game:addHit()
 end
 
 function Game:update(dt)
+  if self.isGameOver then
+    return
+  end
   self.camera:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
 
@@ -146,6 +162,12 @@ function Game:drawUI()
 
   self:drawArrows()
 
+
+  if self.isGameOver then
+    love.graphics.setFont(self.font)
+    love.graphics.printf("Game over", 16, 200, 200, "left")
+  end
+
   love.graphics.pop()
 end
 
@@ -202,6 +224,7 @@ function Game:getMousePosition()
   mx = (mx - self.translate[1]) / self.scaling
   my = (my - self.translate[2]) / self.scaling
 
+
   local cx, cy = self.camera:toWorldCoords(mx, my)
 
   return mx, my, cx, cy
@@ -225,6 +248,11 @@ end
 function Game:keypressed(key)
   if key == "escape" then
     love.event.quit()
+  end
+
+  if key == "space" and self.isGameOver then
+    self.isGameOver = false
+    self:setupGame()
   end
 end
 
