@@ -48,6 +48,10 @@ function Person:getY()
 end
 
 function Person:update(dt)
+    if self.dead then
+        return
+    end
+
     if self.object:enter('Poop') then
         local collision = self.object:getEnterCollisionData('Poop')
         local object = collision.collider:getObject()
@@ -63,6 +67,7 @@ function Person:update(dt)
 
     if self.object:getX() < -100 or self.object:getX() > config.levelWidth + 100 then
         self:destroy()
+        return
     end
 
     self.object:setLinearVelocity(self.speed, 0)
