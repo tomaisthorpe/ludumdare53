@@ -2,6 +2,7 @@ local config = require("config")
 local Camera = require("Camera")
 local wf = require("windfield")
 local Player = require("player")
+local Level = require("level")
 
 local Game = {
   translate = { 0, 0 },
@@ -19,16 +20,22 @@ function Game:enter()
   self.world:addCollisionClass('Solid')
   self.world:addCollisionClass('Player')
   self.world:addCollisionClass('Poop', { ignores = { 'Player' } })
+  self.world:addCollisionClass('Person', { ignores = { 'Player' } })
 
-  local obj = self.world:newRectangleCollider(-100, 300, 4000, 40)
-  obj:setCollisionClass('Solid')
-  obj:setType('static')
 
   self.camera = Camera(0, 0, 800, 600)
   self.camera:setFollowStyle("LOCKON")
 
   self.player = Player(self, self.world, 100, 100)
   self.entities = {}
+  self.people = {}
+
+  self.level = Level(self, self.world)
+  self.level:generate()
+end
+
+function Game:addPerson(person)
+  table.insert(self.people, person)
 end
 
 function Game:addEntity(entity)
@@ -45,6 +52,14 @@ function Game:update(dt)
   for i, e in ipairs(self.entities) do
     if e.dead then
       table.remove(self.entities, i)
+    else
+      e:update(dt)
+    end
+  end
+
+  for i, e in ipairs(self.people) do
+    if e.dead then
+      table.remove(self.people, i)
     else
       e:update(dt)
     end
@@ -81,6 +96,12 @@ function Game:drawGame()
   self.player:draw()
 
   for _, e in ipairs(self.entities) do
+    if not e.dead then
+      e:draw()
+    end
+  end
+
+  for _, e in ipairs(self.people) do
     if not e.dead then
       e:draw()
     end

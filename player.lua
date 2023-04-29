@@ -10,8 +10,7 @@ local Player = Class {
         self.object = world:newCircleCollider(x, y, 16)
         self.object:setCollisionClass('Player')
         self.object:setObject(self)
-        -- self.object:setFixedRotation(true)
-        -- self.object:setLinearDamping(10)
+        self.object:setFixedRotation(true)
     end,
     goingRight = true,
     dead = false,
