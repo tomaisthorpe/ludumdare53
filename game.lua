@@ -22,8 +22,8 @@ function Game:enter()
   self.world:setGravity(0, 512)
   self.world:addCollisionClass('Solid')
   self.world:addCollisionClass('Player')
-  self.world:addCollisionClass('Poop', { ignores = { 'Player' } })
   self.world:addCollisionClass('Person', { ignores = { 'Player', 'Person' } })
+  self.world:addCollisionClass('Poop', { ignores = { 'Player', 'Person' } })
 
 
   self.camera = Camera(0, 0, 800, 600)
