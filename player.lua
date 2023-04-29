@@ -20,7 +20,7 @@ local Player = Class {
     flapForce = -200,
     flapRate = 1,
     lastFlap = -100,
-    maxVX = 100,
+    maxVX = 200,
 
     poopRate = 1,
     lastPoop = -100,

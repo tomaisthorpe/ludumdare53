@@ -9,6 +9,7 @@ local Level = Class {
 
         self.background = love.graphics.newImage('assets/level.png')
         self.foreground = love.graphics.newImage('assets/level-foreground.png')
+
     end,
     lastPerson = 0,
     personRate = 5,
@@ -25,14 +26,22 @@ function Level:update(dt)
     self.game:addPerson(person)
 end
 
+local boundary = function (world, x, y, w, h)
+    local wall = world:newRectangleCollider(x, y, w, h)
+    wall:setCollisionClass('Solid')
+    wall:setType('static')
+
+    return wall
+end
+
 function Level:generate()
     -- TODO currently can't remove this
-    local obj = self.world:newRectangleCollider(0, 900 - 18, 2100, 18)
-    obj:setCollisionClass('Solid')
-    obj:setType('static')
+    local bottom = boundary(self.world, 0, 900-18, config.levelWidth, 18)
+    local top = boundary(self.world, 0, 0, config.levelWidth, 18)
+    local left = boundary(self.world, 0, 0, 20, config.levelHeight)
+    local right = boundary(self.world, config.levelWidth - 20, 0, 20, config.levelHeight)
 
-    -- local person = Person(self.game, self.world, 500, 300)
-    -- self.game:addPerson(person)
+    self.boundaries = {top, bottom, left, right}
 end
 
 function Level:drawBackground()
