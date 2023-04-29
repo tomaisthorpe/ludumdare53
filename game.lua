@@ -3,6 +3,7 @@ local Camera = require("Camera")
 local wf = require("windfield")
 local Player = require("player")
 local Level = require("level")
+local Splat = require("splat")
 
 local Game = {
   translate = { 0, 0 },
@@ -36,6 +37,8 @@ function Game:enter()
 
   self.level = Level(self, self.world)
   self.level:generate()
+
+  -- self.splat = Splat()
 end
 
 function Game:addPerson(person)
@@ -57,6 +60,7 @@ function Game:update(dt)
   self.world:update(dt)
   self.player:update(dt)
   self.level:update(dt)
+  -- self.splat:update(dt)
 
   for i, e in ipairs(self.entities) do
     if e.dead then
@@ -117,6 +121,8 @@ function Game:drawGame()
       e:draw()
     end
   end
+
+  -- self.splat:draw()
 
   self.level:drawForeground()
 
