@@ -37,6 +37,7 @@ local boundary = function (world, x, y, w, h, class)
     local wall = world:newRectangleCollider(x, y, w, h)
     wall:setCollisionClass(class)
     wall:setType('static')
+    wall:setFriction(0)
 
     return wall
 end
