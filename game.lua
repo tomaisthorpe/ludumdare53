@@ -12,6 +12,8 @@ local Game = {
 function Game:init()
   -- Window setup
   Game:calculateScaling()
+
+  self.font = love.graphics.newFont('assets/sharetech.ttf', 16)
 end
 
 function Game:enter()
@@ -20,7 +22,7 @@ function Game:enter()
   self.world:addCollisionClass('Solid')
   self.world:addCollisionClass('Player')
   self.world:addCollisionClass('Poop', { ignores = { 'Player' } })
-  self.world:addCollisionClass('Person', { ignores = { 'Player' } })
+  self.world:addCollisionClass('Person', { ignores = { 'Player', 'Person' } })
 
 
   self.camera = Camera(0, 0, 800, 600)
@@ -29,6 +31,7 @@ function Game:enter()
   self.player = Player(self, self.world, 100, 100)
   self.entities = {}
   self.people = {}
+  self.hits = 0
 
   self.level = Level(self, self.world)
   self.level:generate()
@@ -40,6 +43,10 @@ end
 
 function Game:addEntity(entity)
   table.insert(self.entities, entity)
+end
+
+function Game:addHit()
+  self.hits = self.hits + 1
 end
 
 function Game:update(dt)
@@ -117,6 +124,11 @@ end
 
 function Game:drawUI()
   love.graphics.push()
+
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.setFont(self.font)
+
+  love.graphics.printf("Hits: ".. self.hits, 16, 16, 200, "left")
 
   love.graphics.pop()
 end

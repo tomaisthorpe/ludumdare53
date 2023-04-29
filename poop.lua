@@ -7,6 +7,7 @@ local Poop = Class {
         self.object:setCollisionClass('Poop')
         self.object:setLinearVelocity(vx, vy)
         self.object:setBullet(true)
+        self.object:setObject(self)
 
         self.dead = false
         self.lifetime = 10

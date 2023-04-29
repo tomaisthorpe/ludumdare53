@@ -1,5 +1,4 @@
 local Class = require("hump.class")
-local Poop = require("poop")
 
 local Person = Class {
     init = function(self, game, world, x, y)
@@ -35,6 +34,13 @@ function Person:getY()
 end
 
 function Person:update(dt)
+    if self.object:enter('Poop') then
+        local collision = self.object:getEnterCollisionData('Poop')
+        local object = collision.collider:getObject()
+        object:destroy()
+
+        self.game:addHit()
+    end
 end
 
 function Person:draw()
