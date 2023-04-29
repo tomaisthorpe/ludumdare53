@@ -175,10 +175,6 @@ function Game:keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-
-  if key == "up" then
-    self.player:flap()
-  end
 end
 
 return Game

@@ -16,15 +16,14 @@ local Player = Class {
     dead = false,
     destroyed = false,
     lift = -750,
-    glide = 250,
-    flapForce = -200,
-    flapRate = 1,
+    glide = 450,
+    flapForce = -80,
+    flapRate = 0.5,
     lastFlap = -100,
     maxVX = 200,
+    maxVY = 100,
 
-    frame = 0,
-    fps = 20,
-    timer = 0,
+    animationTime = 11 / 30,
 
     poopRate = 1,
     lastPoop = -100,
@@ -63,20 +62,16 @@ function Player:update(dt)
     self.object:applyForce(fx, self.lift)
 
     local vx, vy = self.object:getLinearVelocity()
-    self.object:setLinearVelocity(math.min(vx, self.maxVX), vy)
+    self.object:setLinearVelocity(
+        math.max(self.maxVX * -1, math.min(vx, self.maxVX)),
+        math.max(self.maxVY * -1, math.min(vy, self.maxVY)))
 
     if love.keyboard.isDown("space") then
         self:poop()
     end
 
-
-    self.timer = self.timer + dt
-
-    if self.timer > 1 / self.fps then
-        self.frame = self.frame + 1
-        if self.frame > 11 then self.frame = 0 end
-
-        self.timer = 0
+    if love.keyboard.isDown("up") then
+        self:flap()
     end
 end
 
@@ -119,7 +114,12 @@ function Player:draw()
     love.graphics.translate(-16, -16)
     love.graphics.scale(2, 2)
 
-    local quad = love.graphics.newQuad(self.frame * 16, 0, 16, 16, self.image:getWidth(), self.image:getHeight())
+    local frame = 11
+    if self.lastFlap >= love.timer.getTime() - self.animationTime then
+        frame = math.floor(((love.timer.getTime() - self.lastFlap) / self.animationTime) * 11)
+    end
+
+    local quad = love.graphics.newQuad(frame * 16, 0, 16, 16, self.image:getWidth(), self.image:getHeight())
 
     love.graphics.draw(self.image, quad)
 
