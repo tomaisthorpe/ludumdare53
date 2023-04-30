@@ -13,6 +13,10 @@ local Person = Class {
         self.baseFPS = tc.baseFPS
         self.speed = tc.speed
 
+        local speedVariation = tc.speed * 0.05 * (love.math.random() * 2 - 1)
+        self.speed = self.speed + speedVariation
+
+
         self.image = love.graphics.newImage(tc.image)
         self.splat = love.graphics.newImage("assets/person-splat.png")
         self.goingRight = goingRight
