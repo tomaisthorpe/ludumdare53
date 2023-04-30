@@ -52,6 +52,8 @@ function Game:setupGame()
   self.isGameOver = false
   self.gameOverReason = 'floor'
 
+  self.paused = true
+
   self.lifeForce = 1
 end
 
@@ -83,7 +85,7 @@ end
 function Game:update(dt)
   self.camera:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
-  if self.isGameOver then
+  if self.isGameOver or self.paused then
     return
   end
   -- self.camera:update(dt)
@@ -186,6 +188,68 @@ function Game:drawUI()
   if self.isGameOver then
     self:drawGameOver()
   end
+
+  if self.paused or self.isGameOver then
+    self:drawInstructions()
+  end
+end
+
+function Game:drawInstructions()
+  love.graphics.push()
+
+  local inWidth = 350
+  local inHeight = 250
+  local inX = config.uiSizing.margin
+  local inY =  config.windowHeight - inHeight - config.uiSizing.margin
+  local padding = config.uiSizing.margin / 2
+
+  self:drawDialog(inX, inY, inWidth, inHeight)
+
+  love.graphics.push()
+  love.graphics.translate(inX, inY)
+  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setFont(self.largeFont)
+
+  love.graphics.printf("Instructions", padding, padding, inWidth, "left")
+
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.translate(0, 30)
+  love.graphics.setFont(self.font)
+
+  love.graphics.printf("Poop on every person walking past. Letting someone pass unpooped depletes your life force! Game gets harder the longer to play.", padding, padding, inWidth - padding * 2, "left")
+  
+  love.graphics.translate(0, 100)
+
+  love.graphics.printf("Left/right to change direction", padding, padding, inWidth, "left")
+
+  love.graphics.translate(0, 24)
+  love.graphics.printf("Up to flap your wings", padding, padding, inWidth, "left")
+
+  love.graphics.translate(0, 24)
+  love.graphics.printf("Space to poop", padding, padding, inWidth, "left")
+
+  love.graphics.translate(0, 30)
+  love.graphics.setFont(self.largeFont)
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.printf("Press space to start", padding, padding + 1, inWidth - padding * 2, "center")
+  love.graphics.setColor(config.uiPalette.lifeForce)
+  love.graphics.printf("Press space to start", padding, padding, inWidth - padding * 2, "center")
+--   love.graphics.printf("Total poops:", padding, padding, statsWidth, "left")
+--   love.graphics.printf(""..self.totalPoops, 0, padding, statsWidth - padding, "right")
+
+--   local accuracy = 0
+--   if self.totalPoops > 0 then
+--     accuracy = math.ceil((self.hits / self.totalPoops) * 100)
+--   end
+
+--   love.graphics.translate(0, 24)
+--   love.graphics.printf("Accuracy:", padding, padding, statsWidth, "left")
+--   love.graphics.printf(""..accuracy.."%", 0, padding, statsWidth - padding, "right")
+--   love.graphics.pop()
+
+  love.graphics.pop()
+  love.graphics.pop()
+
 end
 
 function Game:drawGameOver()
@@ -202,7 +266,7 @@ function Game:drawGameOver()
   end
 
   love.graphics.setFont(self.largeFont)
-  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.setColor(0.4, 0.4, 0.4)
   love.graphics.printf(reason, 0, 201, 800, "center")
   love.graphics.setColor(config.uiPalette.lifeForce)
   love.graphics.printf(reason, 0, 200, 800, "center")
@@ -368,9 +432,15 @@ function Game:keypressed(key)
     love.event.quit()
   end
 
-  if key == "space" and self.isGameOver then
-    self.isGameOver = false
-    self:setupGame()
+  if key == "space" then
+    if self.isGameOver then
+      self.isGameOver = false
+      self:setupGame()
+    end
+
+    if self.paused then
+      self.paused = false
+    end
   end
 end
 
