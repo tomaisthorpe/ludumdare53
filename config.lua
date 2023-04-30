@@ -69,13 +69,29 @@ local config = {
       imageOffset = -6,
       splatOffset = 2,
     },
+    {
+      hasUmbrella = true,
+      image = 'assets/person-umbrella.png',
+      imageWidth = 12,
+      imageHeight = 24,
+      width = 48,
+      height = 96,
+      baseFPS = 10,
+      frames = 7,
+      speed = 40,
+      afterHitSpeed = 100,
+      frameOffset = 1,
+      imageOffset = 0,
+      splatOffset = 0,
+    },
   },
 
 
   chances = {
     person = function() return 1 end,
     running = function(c) return 0.05 * c + 0.1 end,
-    scooter = function (c) return 0.02 * c end,
+    scooter = function(c) return 0.02 * c end,
+    umbrella = function(c) return 0.03 * c + 0.1 end,
   },
 
   personRate = function(c)
@@ -87,6 +103,7 @@ local config = {
     return rate
   end,
 
+  umbrellaDistance = 150,
   maxChances = 10,
 }
 

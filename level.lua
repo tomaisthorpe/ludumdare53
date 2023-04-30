@@ -43,9 +43,10 @@ end
 function Level:getType()
     local pRate = config.chances.person()
     local rRate = config.chances.running(self.count)
+    local uRate = config.chances.umbrella(self.count)
     local sRate = config.chances.scooter(self.count)
 
-    local total = pRate + rRate + sRate
+    local total = pRate + rRate + uRate + sRate
     local v = love.math.random() * total
 
     if v <= pRate then
@@ -54,6 +55,10 @@ function Level:getType()
 
     if v <= pRate + rRate then
         return 2
+    end
+
+    if v <= pRate + rRate + uRate then
+        return 4
     end
 
     return 3
