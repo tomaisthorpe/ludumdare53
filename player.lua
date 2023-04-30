@@ -104,6 +104,7 @@ function Player:poop()
     local poop = Poop(self.game, self.world, self:getX() + offset, self:getY() + 5, vx, vy)
     self.game:addEntity(poop)
 
+    self.game.totalPoops = self.game.totalPoops + 1
 end
 
 function Player:draw()

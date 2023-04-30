@@ -21,6 +21,9 @@ local config = {
 
   uiPalette = {
     lifeForce = { 0.941, 0.557, 0.298 }, -- orange
+    dialog = { 0.761, 0.761, 0.8 },
+    dialogStroke = { 0.6, 0.6, 0.65 },
+    dialogShadow = { 0.761, 0.761, 0.8, 0.5 },
   },
 }
 

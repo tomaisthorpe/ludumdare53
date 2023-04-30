@@ -16,6 +16,7 @@ function Game:init()
 
   self.font = love.graphics.newFont('assets/sharetech.ttf', 16)
   self.largeFont = love.graphics.newFont('assets/sharetech.ttf', 24)
+  self.xlFont = love.graphics.newFont('assets/sharetech.ttf', 42)
   self.arrow = love.graphics.newImage('assets/arrow.png')
 end
 
@@ -41,6 +42,7 @@ function Game:setupGame()
   self.entities = {}
   self.people = {}
   self.hits = 0
+  self.totalPoops = 0
 
   self.level = Level(self, self.world)
   self.level:generate()
@@ -48,7 +50,7 @@ function Game:setupGame()
   -- self.splat = Splat()
   --
   self.isGameOver = false
-  self.gameOverReason = ''
+  self.gameOverReason = 'floor'
 
   self.lifeForce = 1
 end
@@ -79,11 +81,13 @@ function Game:addHit()
 end
 
 function Game:update(dt)
+  self.camera:update(dt)
+  self.camera:follow(self.player:getX(), self.player:getY())
   if self.isGameOver then
     return
   end
-  self.camera:update(dt)
-  self.camera:follow(self.player:getX(), self.player:getY())
+  -- self.camera:update(dt)
+  -- self.camera:follow(self.player:getX(), self.player:getY())
 
   self.world:update(dt)
   self.player:update(dt)
@@ -177,13 +181,88 @@ function Game:drawUI()
   self:drawBar("Life Force", config.windowWidth - config.uiSizing.lifeForceWidth - config.uiSizing.margin, config.uiSizing.margin, config.uiSizing.lifeForceWidth,
     config.uiPalette.lifeForce, self.lifeForce)
 
+  love.graphics.pop()
+
   if self.isGameOver then
-    love.graphics.setFont(self.font)
-    love.graphics.printf("Game over", 16, 200, 200, "left")
+    self:drawGameOver()
   end
+end
+
+function Game:drawGameOver()
+  love.graphics.push()
+  love.graphics.setFont(self.xlFont)
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.printf("GAME OVER", 0, 151, 800, "center")
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.printf("GAME OVER", 0, 150, 800, "center")
+
+  local reason = 'You hit the floor! Remember to flap.'
+  if reason == 'dead' then
+    reason = 'You let too many people leave unpooped!'
+  end
+
+  love.graphics.setFont(self.largeFont)
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.printf(reason, 0, 201, 800, "center")
+  love.graphics.setColor(config.uiPalette.lifeForce)
+  love.graphics.printf(reason, 0, 200, 800, "center")
+
+
+  local statsWidth = 250
+  local statsHeight = 120
+  local statsX = config.windowWidth - statsWidth - config.uiSizing.margin
+  local statsY =  config.windowHeight - statsHeight - config.uiSizing.margin
+  local padding = config.uiSizing.margin / 2
+
+  self:drawDialog(statsX, statsY, statsWidth, statsHeight)
+
+  love.graphics.push()
+  love.graphics.translate(statsX, statsY)
+  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setFont(self.largeFont)
+
+  love.graphics.printf("Stats", padding, padding, statsWidth, "left")
+
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.translate(0, 30)
+  love.graphics.setFont(self.font)
+
+  love.graphics.printf("Poops on target:", padding, padding, statsWidth, "left")
+  love.graphics.printf(""..self.hits, 0, padding, statsWidth - padding, "right")
+
+  love.graphics.translate(0, 24)
+  love.graphics.printf("Total poops:", padding, padding, statsWidth, "left")
+  love.graphics.printf(""..self.totalPoops, 0, padding, statsWidth - padding, "right")
+
+  local accuracy = 0
+  if self.totalPoops > 0 then
+    accuracy = math.ceil((self.hits / self.totalPoops) * 100)
+  end
+
+  love.graphics.translate(0, 24)
+  love.graphics.printf("Accuracy:", padding, padding, statsWidth, "left")
+  love.graphics.printf(""..accuracy.."%", 0, padding, statsWidth - padding, "right")
+  love.graphics.pop()
 
   love.graphics.pop()
 end
+
+function Game:drawDialog(x, y, width, height)
+
+  love.graphics.push()
+  love.graphics.setColor(config.uiPalette.dialogShadow)
+  love.graphics.rectangle("fill", x-1, y+1, width+2, height, 2)
+
+  love.graphics.setColor(config.uiPalette.dialog)
+  love.graphics.rectangle("fill", x, y, width, height, 2)
+
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(config.uiPalette.dialogStroke)
+  love.graphics.rectangle("line", x, y, width, height, 2)
+
+  love.graphics.pop()
+end
+
 
 function Game:drawBar(label, x, y, width, color, value)
   love.graphics.push()
