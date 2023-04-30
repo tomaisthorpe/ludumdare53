@@ -8,7 +8,7 @@ local Splat = require("splat")
 local Game = {
   translate = { 0, 0 },
   scaling = 1,
-  playSound = false,
+  playSound = true,
 }
 
 function Game:init()
@@ -23,8 +23,9 @@ function Game:init()
   self.splatSounds = {
     love.audio.newSource('assets/splat1.wav', 'static'),
     love.audio.newSource('assets/splat2.wav', 'static'),
-    love.audio.newSource('assets/splat3.wav', 'static'),
   }
+
+  self.dropSound = love.audio.newSource('assets/drop.wav', 'static')
 
   love.audio.setVolume(0.5)
 end
@@ -34,11 +35,17 @@ function Game:enter()
 end
 
 function Game:playSplat()
-  local choice = love.math.random(1, 3)
+  local choice = love.math.random(1, 2)
 
 
   if self.playSound then
     love.audio.play(self.splatSounds[choice])
+  end
+end
+
+function Game:playDrop()
+  if self.playSound then
+    love.audio.play(self.dropSound)
   end
 end
 
