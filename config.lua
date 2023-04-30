@@ -60,7 +60,7 @@ local config = {
       imageWidth = 16,
       imageHeight = 25,
       width = 46,
-      height = 96,
+      height = 100,
       baseFPS = 10,
       frames = 4,
       speed = 165,
@@ -70,6 +70,24 @@ local config = {
       splatOffset = 2,
     },
   },
+
+
+  chances = {
+    person = function() return 1 end,
+    running = function(c) return 0.05 * c + 0.1 end,
+    scooter = function (c) return 0.02 * c end,
+  },
+
+  personRate = function(c)
+    local rate = -0.07 * c + 5
+    if rate < 2 then
+      return 2
+    end
+
+    return rate
+  end,
+
+  maxChances = 10,
 }
 
 return config

@@ -10,10 +10,12 @@ local Level = Class {
         self.background = love.graphics.newImage('assets/level.png')
         self.foreground = love.graphics.newImage('assets/level-foreground.png')
 
+        self.personRate = config.personRate(0)
+        self.count = 0
     end,
     lastPerson = -5,
-    personRate = 5,
 }
+
 
 function Level:update(dt)
     if self.lastPerson >= love.timer.getTime() - self.personRate then
@@ -29,8 +31,34 @@ function Level:update(dt)
         x = config.levelWidth + 75
     end
 
-    local person = Person(self.game, self.world, x, config.levelHeight - 18 - 36, goingRight, 3)
+    local type = self:getType()
+
+    local person = Person(self.game, self.world, x, config.levelHeight - 18 - 36, goingRight, type)
     self.game:addPerson(person)
+
+    self.count = self.count + 1
+    self.personRate = config.personRate(self.count)
+end
+
+function Level:getType()
+    local pRate = config.chances.person()
+    local rRate = config.chances.running(self.count)
+    local sRate = config.chances.scooter(self.count)
+
+    local total = pRate + rRate + sRate
+    local v = love.math.random() * total
+
+    print(self.count, pRate, rRate, sRate, v)
+
+    if v <= pRate then
+        return 1
+    end
+
+    if v <= pRate + rRate then
+        return 2
+    end
+
+    return 3
 end
 
 local boundary = function(world, x, y, w, h, class)

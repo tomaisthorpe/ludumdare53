@@ -113,8 +113,6 @@ function Person:draw()
 
     love.graphics.scale(4, 4)
 
-
-    print((self.frame + self.tc.frameOffset) * self.tc.imageWidth)
     local quad = love.graphics.newQuad((self.frame + self.tc.frameOffset) * self.tc.imageWidth, 0, self.tc.imageWidth, self.tc.imageHeight, self.image:getWidth(), self.image:getHeight())
 
     love.graphics.draw(self.image, quad)
