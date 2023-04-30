@@ -73,7 +73,7 @@ function Game:setupGame()
   self.level = Level(self, self.world)
   self.level:generate()
 
-  -- self.splat = Splat()
+  self.splat = Splat()
   --
   self.isGameOver = false
   self.gameOverReason = 'floor'
@@ -120,7 +120,7 @@ function Game:update(dt)
   self.world:update(dt)
   self.player:update(dt)
   self.level:update(dt)
-  -- self.splat:update(dt)
+  self.splat:update(dt)
 
   for i, e in ipairs(self.entities) do
     if e.dead then
@@ -182,7 +182,7 @@ function Game:drawGame()
     end
   end
 
-  -- self.splat:draw()
+  self.splat:draw()
 
   self.level:drawForeground()
 
