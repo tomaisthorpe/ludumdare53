@@ -51,11 +51,11 @@ function Player:update(dt)
         return
     end
 
-    if love.keyboard.isDown("left") then
+    if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
         self.goingRight = false
     end
 
-    if love.keyboard.isDown("right") then
+    if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
         self.goingRight = true
     end
 
@@ -75,7 +75,7 @@ function Player:update(dt)
         self:poop()
     end
 
-    if love.keyboard.isDown("up") then
+    if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
         self:flap()
     end
 end
