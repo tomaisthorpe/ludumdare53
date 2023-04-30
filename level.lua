@@ -29,11 +29,11 @@ function Level:update(dt)
         x = config.levelWidth + 75
     end
 
-    local person = Person(self.game, self.world, x, config.levelHeight - 18 - 36, goingRight)
+    local person = Person(self.game, self.world, x, config.levelHeight - 18 - 36, goingRight, 3)
     self.game:addPerson(person)
 end
 
-local boundary = function (world, x, y, w, h, class)
+local boundary = function(world, x, y, w, h, class)
     local wall = world:newRectangleCollider(x, y, w, h)
     wall:setCollisionClass(class)
     wall:setType('static')
@@ -44,12 +44,12 @@ end
 
 function Level:generate()
     -- TODO currently can't remove this
-    local bottom = boundary(self.world, -150, 900-19, config.levelWidth + 300, 19, 'Solid')
+    local bottom = boundary(self.world, -150, 900 - 19, config.levelWidth + 300, 19, 'Solid')
     local top = boundary(self.world, 0, 0, config.levelWidth, 18, 'Boundary')
     local left = boundary(self.world, 0, 0, 20, config.levelHeight, 'Boundary')
     local right = boundary(self.world, config.levelWidth - 20, 0, 20, config.levelHeight, 'Boundary')
 
-    self.boundaries = {top, bottom, left, right}
+    self.boundaries = { top, bottom, left, right }
 end
 
 function Level:drawBackground()

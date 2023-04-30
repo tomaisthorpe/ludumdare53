@@ -2,28 +2,32 @@ local Class = require("hump.class")
 local config = require("config")
 
 local Person = Class {
-    init = function(self, game, world, x, y, goingRight)
+    init = function(self, game, world, x, y, goingRight, type)
         self.game = game
         self.world = world
-        self.image = love.graphics.newImage("assets/person.png")
+        self.type = type
+
+        local tc = config.people[type]
+        self.tc = tc
+
+        self.baseFPS = tc.baseFPS
+        self.speed = tc.speed
+
+        self.image = love.graphics.newImage(tc.image)
         self.splat = love.graphics.newImage("assets/person-splat.png")
         self.goingRight = goingRight
 
-        self.object = world:newRectangleCollider(x, y - 45, 48, 96)
+        self.object = world:newRectangleCollider(x, y - (tc.height / 2), tc.width, tc.height)
         self.object:setCollisionClass('Person')
         self.object:setObject(self)
         self.object:setFixedRotation(true)
         self.object:setLinearDamping(10)
     end,
     dead = false,
-    speed = 40,
-    walkingSpeed = 40,
-    runningSpeed = 100,
 
     hits = 0,
 
     frame = 0,
-    baseFPS = 10,
     timer = 0,
 }
 
@@ -40,7 +44,7 @@ function Person:getX()
 end
 
 function Person:getFPS()
-    return self.baseFPS * (self.speed / self.walkingSpeed)
+    return self.baseFPS * (self.speed / self.tc.speed)
 end
 
 function Person:getY()
@@ -62,7 +66,7 @@ function Person:update(dt)
         end
 
         self.hits = self.hits + 1
-        self.speed = self.runningSpeed
+        self.speed = self.tc.afterHitSpeed
     end
 
     if self.object:getX() < -100 or self.object:getX() > config.levelWidth + 100 then
@@ -85,7 +89,7 @@ function Person:update(dt)
 
     if self.timer > 1 / self:getFPS() then
         self.frame = self.frame + 1
-        if self.frame > 7 then self.frame = 0 end
+        if self.frame > self.tc.frames then self.frame = 0 end
 
         self.timer = 0
     end
@@ -105,15 +109,18 @@ function Person:draw()
         love.graphics.scale(-1, 1)
     end
 
-    love.graphics.translate(-24, -96 / 2)
+    love.graphics.translate((-self.tc.width / 2) + self.tc.imageOffset, -self.tc.height / 2)
 
     love.graphics.scale(4, 4)
 
-    local quad = love.graphics.newQuad((self.frame + 1) * 12, 0, 12, 24, self.image:getWidth(), self.image:getHeight())
+
+    print((self.frame + self.tc.frameOffset) * self.tc.imageWidth)
+    local quad = love.graphics.newQuad((self.frame + self.tc.frameOffset) * self.tc.imageWidth, 0, self.tc.imageWidth, self.tc.imageHeight, self.image:getWidth(), self.image:getHeight())
 
     love.graphics.draw(self.image, quad)
 
     if self.hits > 0 then
+        love.graphics.translate(self.tc.splatOffset, 0)
         local sQuad = love.graphics.newQuad((math.min(self.hits, 6) - 1) * 12, 0, 12, 24, self.splat:getWidth(),
             self.splat:getHeight())
         love.graphics.draw(self.splat, sQuad)
