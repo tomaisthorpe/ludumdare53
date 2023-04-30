@@ -15,6 +15,7 @@ function Game:init()
   Game:calculateScaling()
 
   self.font = love.graphics.newFont('assets/sharetech.ttf', 16)
+  self.largeFont = love.graphics.newFont('assets/sharetech.ttf', 24)
   self.arrow = love.graphics.newImage('assets/arrow.png')
 end
 
@@ -164,14 +165,16 @@ end
 function Game:drawUI()
   love.graphics.push()
 
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.setFont(self.font)
+  love.graphics.setFont(self.largeFont)
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  love.graphics.printf("Hits: " .. self.hits, config.uiSizing.margin, config.uiSizing.margin + 1, 200, "left")
 
-  love.graphics.printf("Hits: " .. self.hits, 16, 16, 200, "left")
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.printf("Hits: " .. self.hits, config.uiSizing.margin, config.uiSizing.margin, 200, "left")
 
   self:drawArrows()
 
-  self:drawBar("Life Force", config.uiSizing.margin, config.uiSizing.margin, config.uiSizing.lifeForceWidth,
+  self:drawBar("Life Force", config.windowWidth - config.uiSizing.lifeForceWidth - config.uiSizing.margin, config.uiSizing.margin, config.uiSizing.lifeForceWidth,
     config.uiPalette.lifeForce, self.lifeForce)
 
   if self.isGameOver then

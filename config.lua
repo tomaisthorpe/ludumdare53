@@ -16,7 +16,7 @@ local config = {
     strokeWidth = 2,
     barPadding = 2,
     barHeight = 26,
-    lifeForceWidth = 400,
+    lifeForceWidth = 500,
   },
 
   uiPalette = {
