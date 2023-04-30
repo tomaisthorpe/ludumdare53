@@ -10,7 +10,7 @@ function love.load()
   love.window.setFullscreen(config.fullscreen)
 
   Gamestate.switch(Game)
-  love.window.setTitle("Ludum Dare 53")
+  love.window.setTitle("Pigeon Splat")
 end
 
 function setupWindow()
