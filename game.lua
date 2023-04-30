@@ -27,7 +27,7 @@ function Game:init()
 
   self.dropSound = love.audio.newSource('assets/drop.wav', 'static')
 
-  love.audio.setVolume(0.5)
+  love.audio.setVolume(0.8)
 end
 
 function Game:enter()
@@ -63,7 +63,7 @@ function Game:setupGame()
   self.camera:setFollowStyle("LOCKON")
   self.camera:setBounds(0, 0, config.levelWidth, config.levelHeight)
 
-  self.player = Player(self, self.world, 200, 500)
+  self.player = Player(self, self.world, 850, 400)
   self.player.lastPoop = love.timer.getTime()
   self.entities = {}
   self.people = {}
@@ -225,7 +225,7 @@ function Game:drawInstructions()
   love.graphics.push()
 
   local inWidth = 350
-  local inHeight = 250
+  local inHeight = 280
   local inX = config.uiSizing.margin
   local inY = config.windowHeight - inHeight - config.uiSizing.margin
   local padding = config.uiSizing.margin / 2
@@ -255,6 +255,9 @@ function Game:drawInstructions()
 
   love.graphics.translate(0, 24)
   love.graphics.printf("Space to poop", padding, padding, inWidth, "left")
+
+  love.graphics.translate(0, 24)
+  love.graphics.printf("M to toggle sounds", padding, padding, inWidth, "left")
 
   love.graphics.translate(0, 30)
   love.graphics.setFont(self.largeFont)
@@ -467,6 +470,15 @@ function Game:keypressed(key)
 
     if self.paused then
       self.paused = false
+      self.player.lastPoop = love.timer.getTime()
+    end
+  end
+
+  if key == "m" then
+    if self.playSound then
+      self.playSound = false
+    else
+      self.playSound = true
     end
   end
 end
