@@ -9,7 +9,7 @@ local config = {
   levelWidth = 2100,
   levelHeight = 900,
 
-  damagePerPerson = 0.1,
+  damagePerPerson = 0.2,
 
   uiSizing = {
     margin = 16,

@@ -85,7 +85,7 @@ end
 
 function Game:damage()
   self.lifeForce = self.lifeForce - config.damagePerPerson
-  if self.lifeForce < 0 then
+  if self.lifeForce <= 0 then
     self.lifeForce = 0
     self:gameOver("dead")
   end
@@ -292,7 +292,7 @@ function Game:drawGameOver()
   love.graphics.printf("GAME OVER", 0, 150, 800, "center")
 
   local reason = 'You hit the floor! Remember to flap.'
-  if reason == 'dead' then
+  if self.gameOverReason == 'dead' then
     reason = 'You let too many people leave unpooped!'
   end
 
