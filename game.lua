@@ -39,6 +39,7 @@ function Game:setupGame()
   self.camera:setBounds(0, 0, config.levelWidth, config.levelHeight)
 
   self.player = Player(self, self.world, 200, 500)
+  self.player.lastPoop = love.timer.getTime()
   self.entities = {}
   self.people = {}
   self.hits = 0
