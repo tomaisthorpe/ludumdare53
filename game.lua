@@ -225,7 +225,7 @@ function Game:drawInstructions()
   love.graphics.push()
 
   local inWidth = 350
-  local inHeight = 280
+  local inHeight = 300
   local inX = config.uiSizing.margin
   local inY = config.windowHeight - inHeight - config.uiSizing.margin
   local padding = config.uiSizing.margin / 2
@@ -243,10 +243,10 @@ function Game:drawInstructions()
   love.graphics.translate(0, 30)
   love.graphics.setFont(self.font)
 
-  love.graphics.printf("Poop on every person walking past. Letting someone pass unpooped depletes your life force! Game gets harder the longer to play."
+  love.graphics.printf("Poop on every person walking past. Letting someone pass unpooped depletes your life force! Game gets harder the longer to play. Some people may put up an umbrella if you get too close."
     , padding, padding, inWidth - padding * 2, "left")
 
-  love.graphics.translate(0, 100)
+  love.graphics.translate(0, 120)
 
   love.graphics.printf("Left/right to change direction", padding, padding, inWidth, "left")
 
