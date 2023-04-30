@@ -49,6 +49,7 @@ function Poop:update(dt)
 end
 
 function Poop:destroy()
+    self.game:playSplat()
     if self.dead == false and self.object then
         self.object:destroy()
         self.dead = true

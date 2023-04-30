@@ -48,8 +48,6 @@ function Level:getType()
     local total = pRate + rRate + sRate
     local v = love.math.random() * total
 
-    print(self.count, pRate, rRate, sRate, v)
-
     if v <= pRate then
         return 1
     end

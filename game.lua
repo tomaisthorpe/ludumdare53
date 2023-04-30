@@ -8,6 +8,7 @@ local Splat = require("splat")
 local Game = {
   translate = { 0, 0 },
   scaling = 1,
+  playSound = false,
 }
 
 function Game:init()
@@ -18,10 +19,27 @@ function Game:init()
   self.largeFont = love.graphics.newFont('assets/sharetech.ttf', 24)
   self.xlFont = love.graphics.newFont('assets/sharetech.ttf', 42)
   self.arrow = love.graphics.newImage('assets/arrow.png')
+
+  self.splatSounds = {
+    love.audio.newSource('assets/splat1.wav', 'static'),
+    love.audio.newSource('assets/splat2.wav', 'static'),
+    love.audio.newSource('assets/splat3.wav', 'static'),
+  }
+
+  love.audio.setVolume(0.5)
 end
 
 function Game:enter()
   self:setupGame()
+end
+
+function Game:playSplat()
+  local choice = love.math.random(1, 3)
+
+
+  if self.playSound then
+    love.audio.play(self.splatSounds[choice])
+  end
 end
 
 function Game:setupGame()
@@ -181,7 +199,8 @@ function Game:drawUI()
 
   self:drawArrows()
 
-  self:drawBar("Life Force", config.windowWidth - config.uiSizing.lifeForceWidth - config.uiSizing.margin, config.uiSizing.margin, config.uiSizing.lifeForceWidth,
+  self:drawBar("Life Force", config.windowWidth - config.uiSizing.lifeForceWidth - config.uiSizing.margin,
+    config.uiSizing.margin, config.uiSizing.lifeForceWidth,
     config.uiPalette.lifeForce, self.lifeForce)
 
   love.graphics.pop()
@@ -201,7 +220,7 @@ function Game:drawInstructions()
   local inWidth = 350
   local inHeight = 250
   local inX = config.uiSizing.margin
-  local inY =  config.windowHeight - inHeight - config.uiSizing.margin
+  local inY = config.windowHeight - inHeight - config.uiSizing.margin
   local padding = config.uiSizing.margin / 2
 
   self:drawDialog(inX, inY, inWidth, inHeight)
@@ -217,8 +236,9 @@ function Game:drawInstructions()
   love.graphics.translate(0, 30)
   love.graphics.setFont(self.font)
 
-  love.graphics.printf("Poop on every person walking past. Letting someone pass unpooped depletes your life force! Game gets harder the longer to play.", padding, padding, inWidth - padding * 2, "left")
-  
+  love.graphics.printf("Poop on every person walking past. Letting someone pass unpooped depletes your life force! Game gets harder the longer to play."
+    , padding, padding, inWidth - padding * 2, "left")
+
   love.graphics.translate(0, 100)
 
   love.graphics.printf("Left/right to change direction", padding, padding, inWidth, "left")
@@ -235,18 +255,18 @@ function Game:drawInstructions()
   love.graphics.printf("Press space to start", padding, padding + 1, inWidth - padding * 2, "center")
   love.graphics.setColor(config.uiPalette.lifeForce)
   love.graphics.printf("Press space to start", padding, padding, inWidth - padding * 2, "center")
---   love.graphics.printf("Total poops:", padding, padding, statsWidth, "left")
---   love.graphics.printf(""..self.totalPoops, 0, padding, statsWidth - padding, "right")
+  --   love.graphics.printf("Total poops:", padding, padding, statsWidth, "left")
+  --   love.graphics.printf(""..self.totalPoops, 0, padding, statsWidth - padding, "right")
 
---   local accuracy = 0
---   if self.totalPoops > 0 then
---     accuracy = math.ceil((self.hits / self.totalPoops) * 100)
---   end
+  --   local accuracy = 0
+  --   if self.totalPoops > 0 then
+  --     accuracy = math.ceil((self.hits / self.totalPoops) * 100)
+  --   end
 
---   love.graphics.translate(0, 24)
---   love.graphics.printf("Accuracy:", padding, padding, statsWidth, "left")
---   love.graphics.printf(""..accuracy.."%", 0, padding, statsWidth - padding, "right")
---   love.graphics.pop()
+  --   love.graphics.translate(0, 24)
+  --   love.graphics.printf("Accuracy:", padding, padding, statsWidth, "left")
+  --   love.graphics.printf(""..accuracy.."%", 0, padding, statsWidth - padding, "right")
+  --   love.graphics.pop()
 
   love.graphics.pop()
   love.graphics.pop()
@@ -276,7 +296,7 @@ function Game:drawGameOver()
   local statsWidth = 250
   local statsHeight = 120
   local statsX = config.windowWidth - statsWidth - config.uiSizing.margin
-  local statsY =  config.windowHeight - statsHeight - config.uiSizing.margin
+  local statsY = config.windowHeight - statsHeight - config.uiSizing.margin
   local padding = config.uiSizing.margin / 2
 
   self:drawDialog(statsX, statsY, statsWidth, statsHeight)
@@ -293,11 +313,11 @@ function Game:drawGameOver()
   love.graphics.setFont(self.font)
 
   love.graphics.printf("Poops on target:", padding, padding, statsWidth, "left")
-  love.graphics.printf(""..self.hits, 0, padding, statsWidth - padding, "right")
+  love.graphics.printf("" .. self.hits, 0, padding, statsWidth - padding, "right")
 
   love.graphics.translate(0, 24)
   love.graphics.printf("Total poops:", padding, padding, statsWidth, "left")
-  love.graphics.printf(""..self.totalPoops, 0, padding, statsWidth - padding, "right")
+  love.graphics.printf("" .. self.totalPoops, 0, padding, statsWidth - padding, "right")
 
   local accuracy = 0
   if self.totalPoops > 0 then
@@ -306,7 +326,7 @@ function Game:drawGameOver()
 
   love.graphics.translate(0, 24)
   love.graphics.printf("Accuracy:", padding, padding, statsWidth, "left")
-  love.graphics.printf(""..accuracy.."%", 0, padding, statsWidth - padding, "right")
+  love.graphics.printf("" .. accuracy .. "%", 0, padding, statsWidth - padding, "right")
   love.graphics.pop()
 
   love.graphics.pop()
@@ -316,7 +336,7 @@ function Game:drawDialog(x, y, width, height)
 
   love.graphics.push()
   love.graphics.setColor(config.uiPalette.dialogShadow)
-  love.graphics.rectangle("fill", x-1, y+1, width+2, height, 2)
+  love.graphics.rectangle("fill", x - 1, y + 1, width + 2, height, 2)
 
   love.graphics.setColor(config.uiPalette.dialog)
   love.graphics.rectangle("fill", x, y, width, height, 2)
@@ -327,7 +347,6 @@ function Game:drawDialog(x, y, width, height)
 
   love.graphics.pop()
 end
-
 
 function Game:drawBar(label, x, y, width, color, value)
   love.graphics.push()
