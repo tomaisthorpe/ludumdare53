@@ -49,6 +49,15 @@ function Game:setupGame()
   self.isGameOver = false
   self.gameOverReason = ''
 
+  self.lifeForce = 1
+end
+
+function Game:damage()
+  self.lifeForce = self.lifeForce - config.damagePerPerson
+  if self.lifeForce < 0 then
+    self.lifeForce = 0
+    self:gameOver("dead")
+  end
 end
 
 function Game:gameOver(reason)
@@ -158,15 +167,42 @@ function Game:drawUI()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setFont(self.font)
 
-  love.graphics.printf("Hits: ".. self.hits, 16, 16, 200, "left")
+  love.graphics.printf("Hits: " .. self.hits, 16, 16, 200, "left")
 
   self:drawArrows()
 
+  self:drawBar("Life Force", config.uiSizing.margin, config.uiSizing.margin, config.uiSizing.lifeForceWidth,
+    config.uiPalette.lifeForce, self.lifeForce)
 
   if self.isGameOver then
     love.graphics.setFont(self.font)
     love.graphics.printf("Game over", 16, 200, 200, "left")
   end
+
+  love.graphics.pop()
+end
+
+function Game:drawBar(label, x, y, width, color, value)
+  love.graphics.push()
+
+  love.graphics.translate(x, y)
+
+  love.graphics.setLineWidth(config.uiSizing.strokeWidth)
+  local level = (width - config.uiSizing.barPadding * 2) * value
+
+  love.graphics.setColor(color)
+
+  love.graphics.rectangle("line", 0, 0, width, config.uiSizing.barHeight)
+  love.graphics.rectangle("fill", config.uiSizing.barPadding, config.uiSizing.barPadding, level,
+    config.uiSizing.barHeight - config.uiSizing.barPadding * 2)
+
+  love.graphics.setColor(0.4, 0.4, 0.4)
+  love.graphics.setFont(self.font)
+  love.graphics.printf(label, 5, 4, 200)
+
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.setFont(self.font)
+  love.graphics.printf(label, 5, 3, 200)
 
   love.graphics.pop()
 end
@@ -187,7 +223,7 @@ function Game:drawArrows()
     if e.dead == false then
       local x = e:getX()
 
-      if  e.hits == 0 then
+      if e.hits == 0 then
         if x < minX and x > 0 then
           leftArrow = true
         end

@@ -8,6 +8,20 @@ local config = {
 
   levelWidth = 2100,
   levelHeight = 900,
+
+  damagePerPerson = 0.1,
+
+  uiSizing = {
+    margin = 16,
+    strokeWidth = 2,
+    barPadding = 2,
+    barHeight = 26,
+    lifeForceWidth = 400,
+  },
+
+  uiPalette = {
+    lifeForce = { 0.941, 0.557, 0.298 }, -- orange
+  },
 }
 
 return config
