@@ -85,7 +85,7 @@ end
 
 function Game:damage()
   self.lifeForce = self.lifeForce - config.damagePerPerson
-  if self.lifeForce <= 0 then
+  if self.lifeForce <= 0.05 then
     self.lifeForce = 0
     self:gameOver("dead")
   end
